@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Table from "../components/Table";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
 
       <main>
         <h1 className={styles.title}>Lights Tracker Application</h1>
+        <Table></Table>
       </main>
     </div>
   );
