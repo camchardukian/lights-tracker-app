@@ -14,11 +14,13 @@ const StyledButton = styled(Button)`
 `;
 
 export default function TaskRow(props) {
-  const { setIsTaskMenuOpen, setAnchorRef } = useTask();
+  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance } =
+    useTask();
   const { task } = props;
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event, taskAndDay) => {
     setAnchorRef(event.currentTarget);
+    setSelectedTaskInstance(taskAndDay);
     setIsTaskMenuOpen(true);
   };
 
@@ -27,12 +29,13 @@ export default function TaskRow(props) {
       <td style={{ border: "1px solid black" }}>{task.name}</td>
       {task.days.map((day, index) => {
         const anchorRef = useRef(null);
+        const taskAndDay = { task, day };
         return (
           <td key={index}>
             <StyledButton
               completed={day.completed}
               variant="contained"
-              onClick={handleOpenMenu}
+              onClick={(event) => handleOpenMenu(event, taskAndDay)}
               ref={anchorRef}
             >
               {day.completed}

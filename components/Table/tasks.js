@@ -6,6 +6,7 @@ export const tasks = [
       { day: 2, completed: "no" },
       { day: 3, completed: "yes" },
     ],
+    id: 1,
   },
   {
     name: "exercise",
@@ -14,6 +15,7 @@ export const tasks = [
       { day: 2, completed: "half" },
       { day: 3, completed: "yes" },
     ],
+    id: 2,
   },
   {
     name: "meditate 10 minutes",
@@ -22,6 +24,7 @@ export const tasks = [
       { day: 2, completed: "no" },
       { day: 3, completed: "half" },
     ],
+    id: 3,
   },
   {
     name: "30 minute nap",
@@ -30,5 +33,6 @@ export const tasks = [
       { day: 2, completed: "yes" },
       { day: 3, completed: "yes" },
     ],
+    id: 4,
   },
 ];
