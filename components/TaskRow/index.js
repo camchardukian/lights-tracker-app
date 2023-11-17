@@ -26,7 +26,7 @@ export default function TaskRow(props) {
 
   return (
     <tr>
-      <td style={{ border: "1px solid black" }}>{task.name}</td>
+      <td style={{ border: "1px solid black", width: 100 }}>{task.name}</td>
       {task.days.map((day, index) => {
         const anchorRef = useRef(null);
         const taskAndDay = { task, day };
