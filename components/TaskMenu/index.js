@@ -17,8 +17,12 @@ export default function TaskMenu() {
       return prevState.map((task) => {
         if (task.id === selectedTaskInstance.task.id) {
           const updatedDays = task.days.map((day) => {
-            if (day.day === selectedTaskInstance.day.day) {
-              return { ...day, completed: event.target.textContent };
+            const text = event.target.textContent.toLowerCase();
+            if (
+              day.day === selectedTaskInstance.day.day &&
+              ["yes", "no", "half"].includes(text)
+            ) {
+              return { ...day, completed: text };
             }
             return day;
           });
