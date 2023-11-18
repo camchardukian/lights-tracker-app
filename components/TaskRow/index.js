@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
 import { useTask } from "../../hooks/useTask";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Input } from "@mui/material";
 
 const StyledButton = styled(Button)`
@@ -37,13 +37,13 @@ export default function TaskRow(props) {
     });
   };
 
+  const anchorRef = useRef(null);
   return (
     <tr>
       <td style={{ border: "1px solid black", width: 100 }}>
         <Input onChange={handleSetValue} value={task.name}></Input>
       </td>
       {task.days.map((day, index) => {
-        const anchorRef = useRef(null);
         const taskAndDay = { task, day };
         return (
           <td key={index}>

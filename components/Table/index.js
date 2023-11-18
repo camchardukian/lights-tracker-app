@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Input } from "@mui/material";
+import Button from "@mui/material/Button";
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
 
-import { tasks as initialTasks } from "./tasks";
 import { useTask } from "../../hooks/useTask";
-import { Input } from "@mui/material";
 
 export default function Table() {
   const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
@@ -36,23 +36,41 @@ export default function Table() {
     setCurrentText(event.target.value);
   };
 
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, []);
+  const handleAddDay = () => {
+    setTasks((prevState) => {
+      return prevState.map((prevTask) => {
+        const newDay = {
+          day: prevTask.days.length + 1,
+          completed: "no",
+        };
+        const updatedDays = [...prevTask.days, newDay];
+        return {
+          ...prevTask,
+          days: updatedDays,
+        };
+      });
+    });
+  };
+
   return (
     <>
       <table className={styles.table}>
         <thead>
           <tr>
             <th>Task</th>
-            <th>Day 1</th>
-            <th>Day 2</th>
-            <th>Day 3</th>
+            {tasks[0].days.map((_, index) => {
+              return <th key={index}>Day {index + 1}</th>;
+            })}
+            <th>
+              <Button onClick={handleAddDay} variant="contained">
+                Add Day
+              </Button>
+            </th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task, index) => {
-            return <TaskRow key={index} task={task} />;
+            return <TaskRow key={index} task={task} setTasks={setTasks} />;
           })}
           <tr>
             <td>
