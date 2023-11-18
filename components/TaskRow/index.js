@@ -24,6 +24,8 @@ export default function TaskRow(props) {
     setIsTaskMenuOpen(true);
   };
 
+  // @TODO - add functionality so that the user can type what they want the name of a task to be.
+
   return (
     <tr>
       <td style={{ border: "1px solid black", width: 100 }}>{task.name}</td>
