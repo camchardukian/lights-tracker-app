@@ -40,8 +40,12 @@ export default function TaskRow(props) {
   const anchorRef = useRef(null);
   return (
     <tr>
-      <td style={{ border: "1px solid black", width: 100 }}>
-        <Input onChange={handleSetValue} value={task.name}></Input>
+      <td style={{ width: 100 }}>
+        <Input
+          style={{ border: "1px solid black" }}
+          onChange={handleSetValue}
+          value={task.name}
+        ></Input>
       </td>
       {task.days.map((day, index) => {
         const taskAndDay = { task, day };

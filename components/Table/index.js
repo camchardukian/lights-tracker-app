@@ -57,9 +57,13 @@ export default function Table() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Task</th>
+            <th style={{ border: "1px solid black" }}>Task</th>
             {tasks[0].days.map((_, index) => {
-              return <th key={index}>Day {index + 1}</th>;
+              return (
+                <th style={{ border: "1px solid black" }} key={index}>
+                  Day {index + 1}
+                </th>
+              );
             })}
             <th>
               <Button onClick={handleAddDay} variant="contained">
@@ -75,6 +79,7 @@ export default function Table() {
           <tr>
             <td>
               <Input
+                // style={{ border: "1px solid black" }}
                 placeholder="add task"
                 value={currentText}
                 onChange={handleSetValue}
