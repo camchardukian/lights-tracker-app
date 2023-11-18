@@ -1,7 +1,9 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
 import { useTask } from "../../hooks/useTask";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { Input } from "@mui/material";
+
 const StyledButton = styled(Button)`
   color: black;
   width: 70px;
@@ -14,7 +16,7 @@ const StyledButton = styled(Button)`
 `;
 
 export default function TaskRow(props) {
-  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance } =
+  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance, setTasks } =
     useTask();
   const { task } = props;
 
@@ -24,11 +26,22 @@ export default function TaskRow(props) {
     setIsTaskMenuOpen(true);
   };
 
-  // @TODO - add functionality so that the user can type what they want the name of a task to be.
+  const handleSetValue = (event) => {
+    const { value } = event.target;
+    setTasks((prevState) => {
+      if (!value) return prevState;
+      const updatedTask = { ...task, name: value };
+      return prevState.map((prevTask) =>
+        prevTask.id === task.id ? updatedTask : prevTask
+      );
+    });
+  };
 
   return (
     <tr>
-      <td style={{ border: "1px solid black", width: 100 }}>{task.name}</td>
+      <td style={{ border: "1px solid black", width: 100 }}>
+        <Input onChange={handleSetValue} value={task.name}></Input>
+      </td>
       {task.days.map((day, index) => {
         const anchorRef = useRef(null);
         const taskAndDay = { task, day };
