@@ -7,6 +7,10 @@ import { Input } from "@mui/material";
 const StyledButton = styled(Button)`
   color: black;
   width: 70px;
+  margin-right: 50px;
+  position: absolute;
+  top: 0;
+  height: 100%;
   background-color: ${(props) =>
     props.completed === "yes"
       ? "green"
@@ -51,7 +55,7 @@ export default function TaskRow(props) {
       {task.days.map((day, index) => {
         const taskAndDay = { task, day };
         return (
-          <td key={index}>
+          <td style={{ position: "relative" }} key={index}>
             <StyledButton
               completed={day.completed}
               variant="contained"
