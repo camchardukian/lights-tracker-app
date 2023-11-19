@@ -7,7 +7,6 @@ import { Input } from "@mui/material";
 const StyledButton = styled(Button)`
   color: black;
   width: 70px;
-  margin-right: 50px;
   position: absolute;
   top: 0;
   height: 100%;
