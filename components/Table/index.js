@@ -1,17 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@mui/material";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
-
+import dayjs from "dayjs";
 import { useTask } from "../../hooks/useTask";
 import React from "react";
+
+const dateFormat = "ddd - MMM DD";
 
 export default function Table() {
   const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
   const [currentText, setCurrentText] = useState("");
+  const [startDate, setStartDate] = useState(dayjs(new Date()));
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleAddTask(event);
@@ -55,63 +61,82 @@ export default function Table() {
     });
   };
 
+  useEffect(() => {
+    console.log("start date changed.", startDate);
+  }, [startDate]);
+
+  const handleSetDate = (dayjsDate) => {
+    setStartDate(dayjsDate);
+  };
+
   return (
-    <>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th className={styles.tableHead}>
-              Task
-              <Divider
-                className={styles.divider}
-                orientation="vertical"
-                flexItem
-              />
-            </th>
-            {tasks[0].days.map((_, index) => {
-              return (
-                <React.Fragment key={index}>
-                  <th className={styles.tableHead}>
-                    <Divider
-                      className={styles.divider}
-                      orientation="vertical"
-                      flexItem
-                    />
-                    Day {index + 1}
-                  </th>
-                </React.Fragment>
-              );
+    <div>
+      <div style={{ width: "100%", textAlign: "center" }}>
+        <DatePicker onChange={handleSetDate} label="Choose start date" />
+      </div>
+      {/* @TODO - Improve this so that horizontal scrolling works better. */}
+      <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
+        {/* @TODO - Implement pagination for when there are more than 7 days. */}
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.tableHead}>
+                Task
+                {/* @TODO - Add click and drag to adjust column width */}
+                <Divider
+                  className={styles.divider}
+                  orientation="vertical"
+                  flexItem
+                />
+              </th>
+              {tasks[0].days.map((_, index) => {
+                return (
+                  <React.Fragment key={index}>
+                    <th className={styles.tableHead}>
+                      <Divider
+                        className={styles.divider}
+                        orientation="vertical"
+                        flexItem
+                      />
+                      {/* ${a.add(7, 'day')} */}
+                      {dayjs(startDate.add(index, "day")).format(dateFormat)}
+                    </th>
+                  </React.Fragment>
+                );
+              })}
+              <th>
+                <Button onClick={handleAddDay} variant="contained">
+                  Add Day
+                </Button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {tasks.map((task, index) => {
+              return <TaskRow key={index} task={task} setTasks={setTasks} />;
             })}
-            <th>
-              <Button onClick={handleAddDay} variant="contained">
-                Add Day
-              </Button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task, index) => {
-            return <TaskRow key={index} task={task} setTasks={setTasks} />;
-          })}
-          <tr>
-            <td>
-              <Input
-                style={{ border: "1px solid black", width: 200 }}
-                placeholder="add task"
-                value={currentText}
-                onChange={handleSetValue}
-                onBlur={handleAddTask}
-                onKeyDown={handleKeyDown}
-              ></Input>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <TaskMenu
-        anchorRef={anchorRef}
-        isOpen={isTaskMenuOpen}
-        selectedTaskInstance
-      />
-    </>
+            <tr>
+              <td>
+                <Input
+                  style={{ border: "1px solid black", width: 200 }}
+                  placeholder="add task"
+                  value={currentText}
+                  onChange={handleSetValue}
+                  onBlur={handleAddTask}
+                  onKeyDown={handleKeyDown}
+                ></Input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        {isTaskMenuOpen && (
+          <TaskMenu
+            anchorRef={anchorRef}
+            isOpen={isTaskMenuOpen}
+            selectedTaskInstance
+          />
+        )}
+      </div>
+    </div>
   );
 }
