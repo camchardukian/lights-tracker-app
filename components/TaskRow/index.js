@@ -18,7 +18,7 @@ const StyledButton = styled(Button)`
 export default function TaskRow(props) {
   const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance, setTasks } =
     useTask();
-  const { task } = props;
+  const { task, style } = props;
 
   const handleOpenMenu = (event, taskAndDay) => {
     setAnchorRef(event.currentTarget);
@@ -39,7 +39,7 @@ export default function TaskRow(props) {
 
   const anchorRef = useRef(null);
   return (
-    <tr>
+    <tr style={style}>
       <td style={{ width: 100 }}>
         <Input
           style={{ border: "1px solid black" }}

@@ -36,3 +36,5 @@ export const tasks = [
     id: 4,
   },
 ];
+
+export const tasksColumnWidth = 100;

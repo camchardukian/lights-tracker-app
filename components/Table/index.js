@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Input } from "@mui/material";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
 
 import { useTask } from "../../hooks/useTask";
+import React from "react";
 
 export default function Table() {
   const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
@@ -57,12 +59,26 @@ export default function Table() {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid black" }}>Task</th>
+            <th className={styles.tableHead}>
+              Task
+              <Divider
+                className={styles.divider}
+                orientation="vertical"
+                flexItem
+              />
+            </th>
             {tasks[0].days.map((_, index) => {
               return (
-                <th style={{ border: "1px solid black" }} key={index}>
-                  Day {index + 1}
-                </th>
+                <React.Fragment key={index}>
+                  <th className={styles.tableHead}>
+                    <Divider
+                      className={styles.divider}
+                      orientation="vertical"
+                      flexItem
+                    />
+                    Day {index + 1}
+                  </th>
+                </React.Fragment>
               );
             })}
             <th>
@@ -79,7 +95,7 @@ export default function Table() {
           <tr>
             <td>
               <Input
-                // style={{ border: "1px solid black" }}
+                style={{ border: "1px solid black", width: 200 }}
                 placeholder="add task"
                 value={currentText}
                 onChange={handleSetValue}

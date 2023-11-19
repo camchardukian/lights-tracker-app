@@ -1,3 +1,19 @@
 .table {
     border: 1px solid green;
+    border-spacing: 0px;
+}
+
+.tableHead {
+    position: relative;
+}
+
+.divider {
+    width: 2px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.divider:hover {
+    cursor: col-resize;
 }
