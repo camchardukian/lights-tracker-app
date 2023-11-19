@@ -21,13 +21,14 @@ export default function Table() {
     const { value } = event.target;
     if (!value) return;
     setTasks((prevState) => {
+      const numOfDays = tasks[0]["days"].length;
+      const days = Array.from({ length: numOfDays }, (_, index) => ({
+        day: index + 1,
+        completed: "no",
+      }));
       return prevState.concat({
         name: value,
-        days: [
-          { day: 1, completed: "no" },
-          { day: 2, completed: "no" },
-          { day: 3, completed: "no" },
-        ],
+        days,
         id: Math.random(),
       });
     });
