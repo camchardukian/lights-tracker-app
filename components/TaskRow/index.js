@@ -40,11 +40,12 @@ export default function TaskRow(props) {
   const anchorRef = useRef(null);
   return (
     <tr style={style}>
-      <td style={{ width: 100 }}>
+      <td>
         <Input
-          style={{ border: "1px solid black" }}
+          style={{ border: "1px solid black", width: "100%" }}
           onChange={handleSetValue}
           value={task.name}
+          multiline
         ></Input>
       </td>
       {task.days.map((day, index) => {
