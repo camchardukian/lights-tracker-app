@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-import { Input } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
-import dayjs from "dayjs";
 import { useTask } from "../../hooks/useTask";
-import React from "react";
 
 const dateFormat = "ddd - MMM DD";
 
@@ -17,6 +16,7 @@ export default function Table() {
   const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
   const [currentText, setCurrentText] = useState("");
   const [startDate, setStartDate] = useState(dayjs(new Date()));
+  // const [currentPage, setCurrentPage] = useState(1);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -98,7 +98,6 @@ export default function Table() {
                         orientation="vertical"
                         flexItem
                       />
-                      {/* ${a.add(7, 'day')} */}
                       {dayjs(startDate.add(index, "day")).format(dateFormat)}
                     </th>
                   </React.Fragment>
