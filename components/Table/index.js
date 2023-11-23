@@ -16,7 +16,10 @@ export default function Table() {
   const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
   const [currentText, setCurrentText] = useState("");
   const [startDate, setStartDate] = useState(dayjs(new Date()));
-  // const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [firstAndLastIndexToShow, setFirstAndLastIndexToShow] = useState([
+    0, 6,
+  ]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -45,14 +48,18 @@ export default function Table() {
     setCurrentText(event.target.value);
   };
 
-  const handleAddDay = () => {
+  const handleAddWeek = () => {
     setTasks((prevState) => {
       return prevState.map((prevTask) => {
-        const newDay = {
-          day: prevTask.days.length + 1,
-          completed: "no",
-        };
-        const updatedDays = [...prevTask.days, newDay];
+        const newDays = [];
+        for (let i = 0; i < 7; i++) {
+          const newDay = {
+            day: prevTask.days.length + i + 1,
+            completed: "no",
+          };
+          newDays.push(newDay);
+        }
+        const updatedDays = [...prevTask.days, ...newDays];
         return {
           ...prevTask,
           days: updatedDays,
@@ -62,12 +69,15 @@ export default function Table() {
   };
 
   useEffect(() => {
-    console.log("start date changed.", startDate);
-  }, [startDate]);
+    const finalItemMaxIndex = currentPage * 7 - 1;
+    setFirstAndLastIndexToShow([finalItemMaxIndex - 6, finalItemMaxIndex]);
+  }, [currentPage, tasks]);
 
   const handleSetDate = (dayjsDate) => {
     setStartDate(dayjsDate);
   };
+
+  console.log("Math.ceil(tasks.length / 7", tasks);
 
   return (
     <div>
@@ -76,7 +86,7 @@ export default function Table() {
       </div>
       {/* @TODO - Improve this so that horizontal scrolling works better. */}
       <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
-        {/* @TODO - Implement pagination for when there are more than 7 days. */}
+        {/* @TODO - Finish implementing pagination for when there are more than 7 days. */}
         <table className={styles.table}>
           <thead>
             <tr>
@@ -89,30 +99,57 @@ export default function Table() {
                   flexItem
                 />
               </th>
+
               {tasks[0].days.map((_, index) => {
-                return (
-                  <React.Fragment key={index}>
-                    <th className={styles.tableHead}>
-                      <Divider
-                        className={styles.divider}
-                        orientation="vertical"
-                        flexItem
-                      />
-                      {dayjs(startDate.add(index, "day")).format(dateFormat)}
-                    </th>
-                  </React.Fragment>
-                );
+                if (
+                  index >= firstAndLastIndexToShow[0] &&
+                  index <= firstAndLastIndexToShow[1]
+                ) {
+                  return (
+                    <React.Fragment key={index}>
+                      <th className={styles.tableHead}>
+                        <Divider
+                          className={styles.divider}
+                          orientation="vertical"
+                          flexItem
+                        />
+                        {dayjs(startDate.add(index, "day")).format(dateFormat)}
+                      </th>
+                    </React.Fragment>
+                  );
+                }
               })}
               <th>
-                <Button onClick={handleAddDay} variant="contained">
-                  Add Day
+                <Button onClick={handleAddWeek} variant="contained">
+                  Add Week
+                </Button>
+                <Button
+                  variant="contained"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  disabled={currentPage === Math.ceil(tasks[0].days.length / 7)}
+                  onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                >
+                  Next
                 </Button>
               </th>
             </tr>
           </thead>
           <tbody>
             {tasks.map((task, index) => {
-              return <TaskRow key={index} task={task} setTasks={setTasks} />;
+              return (
+                <TaskRow
+                  key={index}
+                  task={task}
+                  firstAndLastIndexToShow={firstAndLastIndexToShow}
+                  setTasks={setTasks}
+                />
+              );
             })}
             <tr>
               <td>
