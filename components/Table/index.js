@@ -20,6 +20,8 @@ export default function Table() {
   const [firstAndLastIndexToShow, setFirstAndLastIndexToShow] = useState([
     0, 6,
   ]);
+  const finalPage = Math.ceil(tasks[0].days.length / 7);
+  const isFinalPage = currentPage === finalPage;
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -77,8 +79,6 @@ export default function Table() {
     setStartDate(dayjsDate);
   };
 
-  console.log("Math.ceil(tasks.length / 7", tasks);
-
   return (
     <div>
       <div style={{ width: "100%", textAlign: "center" }}>
@@ -86,7 +86,7 @@ export default function Table() {
       </div>
       {/* @TODO - Improve this so that horizontal scrolling works better. */}
       <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
-        {/* @TODO - Finish implementing pagination for when there are more than 7 days. */}
+        {/* @TODO - Show which page the user is currently on. */}
         <table className={styles.table}>
           <thead>
             <tr>
@@ -120,7 +120,11 @@ export default function Table() {
                 }
               })}
               <th>
-                <Button onClick={handleAddWeek} variant="contained">
+                <Button
+                  disabled={!isFinalPage}
+                  onClick={handleAddWeek}
+                  variant="contained"
+                >
                   Add Week
                 </Button>
                 <Button
@@ -132,7 +136,7 @@ export default function Table() {
                 </Button>
                 <Button
                   variant="contained"
-                  disabled={currentPage === Math.ceil(tasks[0].days.length / 7)}
+                  disabled={isFinalPage}
                   onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
                 >
                   Next
@@ -172,6 +176,9 @@ export default function Table() {
             selectedTaskInstance
           />
         )}
+      </div>
+      <div>
+        you are on week {currentPage} / {finalPage}
       </div>
     </div>
   );
