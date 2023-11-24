@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
@@ -70,6 +72,10 @@ export default function Table() {
     });
   };
 
+  const handlePageChange = (_, pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   useEffect(() => {
     const finalItemMaxIndex = currentPage * 7 - 1;
     setFirstAndLastIndexToShow([finalItemMaxIndex - 6, finalItemMaxIndex]);
@@ -86,7 +92,7 @@ export default function Table() {
       </div>
       {/* @TODO - Improve this so that horizontal scrolling works better. */}
       <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
-        {/* @TODO - Show which page the user is currently on. */}
+        <h2 style={{ textAlign: "center" }}>Week {currentPage}</h2>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -127,20 +133,6 @@ export default function Table() {
                 >
                   Add Week
                 </Button>
-                <Button
-                  variant="contained"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  disabled={isFinalPage}
-                  onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-                >
-                  Next
-                </Button>
               </th>
             </tr>
           </thead>
@@ -177,9 +169,15 @@ export default function Table() {
           />
         )}
       </div>
-      <div>
-        you are on week {currentPage} / {finalPage}
-      </div>
+      <Stack spacing={2}>
+        <Pagination
+          count={finalPage}
+          page={currentPage}
+          disabled={finalPage === 1}
+          color="primary"
+          onChange={handlePageChange}
+        />
+      </Stack>
     </div>
   );
 }
