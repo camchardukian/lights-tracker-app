@@ -15,14 +15,19 @@ import { useTask } from "../../hooks/useTask";
 const dateFormat = "ddd - MMM DD";
 
 export default function Table() {
-  const { isTaskMenuOpen, anchorRef, tasks, setTasks } = useTask();
+  const { isTaskMenuOpen, anchorRef } = useTask();
+  const [tasks, setTasks] = useState([]);
+  const [isMounted, setIsMounted] = useState(false);
   const [currentText, setCurrentText] = useState("");
   const [startDate, setStartDate] = useState(dayjs(new Date()));
   const [currentPage, setCurrentPage] = useState(1);
   const [firstAndLastIndexToShow, setFirstAndLastIndexToShow] = useState([
     0, 6,
   ]);
-  const finalPage = Math.ceil(tasks[0].days.length / 7);
+  let finalPage;
+  if (tasks.length) {
+    finalPage = Math.ceil(tasks[0].days.length / 7);
+  }
   const isFinalPage = currentPage === finalPage;
 
   const handleKeyDown = (event) => {
@@ -77,6 +82,23 @@ export default function Table() {
   };
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await fetch("/api/tasks"); // Replace '/api/tasks' with the appropriate API endpoint URL
+        const data = await response.json();
+        setTasks(data.data);
+        console.log("response", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      setIsMounted(true);
+    };
+
+    getData();
+    console.log("mount tasks");
+  }, []);
+
+  useEffect(() => {
     const finalItemMaxIndex = currentPage * 7 - 1;
     setFirstAndLastIndexToShow([finalItemMaxIndex - 6, finalItemMaxIndex]);
   }, [currentPage, tasks]);
@@ -85,99 +107,107 @@ export default function Table() {
     setStartDate(dayjsDate);
   };
 
-  return (
-    <div>
-      <div style={{ width: "100%", textAlign: "center" }}>
-        <DatePicker onChange={handleSetDate} label="Choose start date" />
-      </div>
-      {/* @TODO - Improve this so that horizontal scrolling works better. */}
-      <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
-        <h2 style={{ textAlign: "center" }}>Week {currentPage}</h2>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th className={styles.tableHead}>
-                Task
-                {/* @TODO - Add click and drag to adjust column width */}
-                <Divider
-                  className={styles.divider}
-                  orientation="vertical"
-                  flexItem
-                />
-              </th>
+  // @TODO - Improve so that we can modify tasks from the TaskMenu and TaskRow again.
 
-              {tasks[0].days.map((_, index) => {
-                if (
-                  index >= firstAndLastIndexToShow[0] &&
-                  index <= firstAndLastIndexToShow[1]
-                ) {
+  return (
+    <>
+      {isMounted && (
+        <div>
+          <div style={{ width: "100%", textAlign: "center" }}>
+            <DatePicker onChange={handleSetDate} label="Choose start date" />
+          </div>
+          {/* @TODO - Improve this so that horizontal scrolling works better. */}
+          <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
+            <h2 style={{ textAlign: "center" }}>Week {currentPage}</h2>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th className={styles.tableHead}>
+                    Task
+                    {/* @TODO - Add click and drag to adjust column width */}
+                    <Divider
+                      className={styles.divider}
+                      orientation="vertical"
+                      flexItem
+                    />
+                  </th>
+
+                  {tasks[0].days.map((_, index) => {
+                    if (
+                      index >= firstAndLastIndexToShow[0] &&
+                      index <= firstAndLastIndexToShow[1]
+                    ) {
+                      return (
+                        <React.Fragment key={index}>
+                          <th className={styles.tableHead}>
+                            <Divider
+                              className={styles.divider}
+                              orientation="vertical"
+                              flexItem
+                            />
+                            {dayjs(startDate.add(index, "day")).format(
+                              dateFormat
+                            )}
+                          </th>
+                        </React.Fragment>
+                      );
+                    }
+                  })}
+                  <th>
+                    <Button
+                      disabled={!isFinalPage}
+                      onClick={handleAddWeek}
+                      variant="contained"
+                    >
+                      Add Week
+                    </Button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {tasks.map((task, index) => {
                   return (
-                    <React.Fragment key={index}>
-                      <th className={styles.tableHead}>
-                        <Divider
-                          className={styles.divider}
-                          orientation="vertical"
-                          flexItem
-                        />
-                        {dayjs(startDate.add(index, "day")).format(dateFormat)}
-                      </th>
-                    </React.Fragment>
+                    <TaskRow
+                      key={index}
+                      task={task}
+                      firstAndLastIndexToShow={firstAndLastIndexToShow}
+                      setTasks={setTasks}
+                    />
                   );
-                }
-              })}
-              <th>
-                <Button
-                  disabled={!isFinalPage}
-                  onClick={handleAddWeek}
-                  variant="contained"
-                >
-                  Add Week
-                </Button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task, index) => {
-              return (
-                <TaskRow
-                  key={index}
-                  task={task}
-                  firstAndLastIndexToShow={firstAndLastIndexToShow}
-                  setTasks={setTasks}
-                />
-              );
-            })}
-            <tr>
-              <td>
-                <Input
-                  style={{ border: "1px solid black", width: 200 }}
-                  placeholder="add task"
-                  value={currentText}
-                  onChange={handleSetValue}
-                  onBlur={handleAddTask}
-                  onKeyDown={handleKeyDown}
-                ></Input>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        {isTaskMenuOpen && (
-          <TaskMenu
-            anchorRef={anchorRef}
-            isOpen={isTaskMenuOpen}
-            selectedTaskInstance
-          />
-        )}
-      </div>
-      <Stack spacing={2}>
-        <Pagination
-          count={finalPage}
-          page={currentPage}
-          disabled={finalPage === 1}
-          color="primary"
-          onChange={handlePageChange}
-        />
-      </Stack>
-    </div>
+                })}
+                <tr>
+                  <td>
+                    <Input
+                      style={{ border: "1px solid black", width: 200 }}
+                      placeholder="add task"
+                      value={currentText}
+                      onChange={handleSetValue}
+                      onBlur={handleAddTask}
+                      onKeyDown={handleKeyDown}
+                    ></Input>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {isTaskMenuOpen && (
+              <TaskMenu
+                anchorRef={anchorRef}
+                isOpen={isTaskMenuOpen}
+                selectedTaskInstance
+              />
+            )}
+          </div>
+          <Stack spacing={2}>
+            <Pagination
+              count={finalPage}
+              page={currentPage}
+              disabled={finalPage === 1}
+              color="primary"
+              onChange={handlePageChange}
+            />
+          </Stack>
+        </div>
+      )}
+    </>
   );
 }
