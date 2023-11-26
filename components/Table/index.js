@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
@@ -111,7 +113,11 @@ export default function Table() {
 
   return (
     <>
-      {isMounted && (
+      {!isMounted ? (
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
         <div>
           <div style={{ width: "100%", textAlign: "center" }}>
             <DatePicker onChange={handleSetDate} label="Choose start date" />

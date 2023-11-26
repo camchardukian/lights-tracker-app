@@ -10,9 +10,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className={styles.title}>Lights Tracker Application</h1>
         <App />
       </main>
+      {/* </TaskProvider> */}
     </div>
   );
 }
