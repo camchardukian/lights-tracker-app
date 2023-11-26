@@ -83,13 +83,23 @@ export default function Table() {
     setCurrentPage(pageNumber);
   };
 
+  const handleEditTask = (event, task) => {
+    const { value } = event.target;
+    setTasks((prevState) => {
+      if (!value) return prevState;
+      const updatedTask = { ...task, name: value };
+      return prevState.map((prevTask) =>
+        prevTask.id === task.id ? updatedTask : prevTask
+      );
+    });
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch("/api/tasks"); // Replace '/api/tasks' with the appropriate API endpoint URL
+        const response = await fetch("/api/tasks");
         const data = await response.json();
         setTasks(data.data);
-        console.log("response", data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -97,7 +107,6 @@ export default function Table() {
     };
 
     getData();
-    console.log("mount tasks");
   }, []);
 
   useEffect(() => {
@@ -177,7 +186,7 @@ export default function Table() {
                       key={index}
                       task={task}
                       firstAndLastIndexToShow={firstAndLastIndexToShow}
-                      setTasks={setTasks}
+                      onEdit={handleEditTask}
                     />
                   );
                 })}

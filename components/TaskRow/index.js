@@ -19,25 +19,14 @@ const StyledButton = styled(Button)`
 `;
 
 export default function TaskRow(props) {
-  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance, setTasks } =
+  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance } =
     useTask();
-  const { task, style, firstAndLastIndexToShow } = props;
+  const { task, style, firstAndLastIndexToShow, onEdit } = props;
 
   const handleOpenMenu = (event, taskAndDay) => {
     setAnchorRef(event.currentTarget);
     setSelectedTaskInstance(taskAndDay);
     setIsTaskMenuOpen(true);
-  };
-
-  const handleSetValue = (event) => {
-    const { value } = event.target;
-    setTasks((prevState) => {
-      if (!value) return prevState;
-      const updatedTask = { ...task, name: value };
-      return prevState.map((prevTask) =>
-        prevTask.id === task.id ? updatedTask : prevTask
-      );
-    });
   };
 
   const anchorRef = useRef(null);
@@ -46,7 +35,7 @@ export default function TaskRow(props) {
       <td>
         <Input
           style={{ border: "1px solid black", width: "100%" }}
-          onChange={handleSetValue}
+          onChange={(event) => onEdit(event, task)}
           value={task.name}
           multiline
         ></Input>
