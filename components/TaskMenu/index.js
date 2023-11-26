@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
 import { useTask } from "../../hooks/useTask";
-export default function TaskMenu() {
+export default function TaskMenu(props) {
   const {
     isTaskMenuOpen,
     setIsTaskMenuOpen,
@@ -12,27 +12,15 @@ export default function TaskMenu() {
     selectedTaskInstance,
     setTasks,
   } = useTask();
-  const handleCloseTaskMenu = (event) => {
-    setTasks((prevState) => {
-      return prevState.map((task) => {
-        if (task.id === selectedTaskInstance.task.id) {
-          const updatedDays = task.days.map((day) => {
-            const text = event.target.textContent.toLowerCase();
-            if (
-              day.day === selectedTaskInstance.day.day &&
-              ["yes", "no", "half"].includes(text)
-            ) {
-              return { ...day, completed: text };
-            }
-            return day;
-          });
-          return { ...task, days: updatedDays };
-        }
-        return task;
-      });
-    });
+  const { onUpdateTaskStatus } = props;
+  const handleCloseTaskMenu = () => {
     setIsTaskMenuOpen(false);
   };
+
+  // const handleUpdateTaskMenu = (event) => {
+
+  //   handleCloseTaskMenu();
+  // };
   return (
     <div>
       <Menu
@@ -44,11 +32,23 @@ export default function TaskMenu() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleCloseTaskMenu}>Yes</MenuItem>
+        <MenuItem
+          onClick={(event) => onUpdateTaskStatus(event, selectedTaskInstance)}
+        >
+          Yes
+        </MenuItem>
         <Divider />
-        <MenuItem onClick={handleCloseTaskMenu}>Half</MenuItem>
+        <MenuItem
+          onClick={(event) => onUpdateTaskStatus(event, selectedTaskInstance)}
+        >
+          Half
+        </MenuItem>
         <Divider />
-        <MenuItem onClick={handleCloseTaskMenu}>No</MenuItem>
+        <MenuItem
+          onClick={(event) => onUpdateTaskStatus(event, selectedTaskInstance)}
+        >
+          No
+        </MenuItem>
       </Menu>
     </div>
   );

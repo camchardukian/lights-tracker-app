@@ -55,7 +55,7 @@ export default function Table() {
     setCurrentText("");
   };
 
-  const handleSetValue = (event) => {
+  const handleSetTaskText = (event) => {
     setCurrentText(event.target.value);
   };
 
@@ -118,7 +118,26 @@ export default function Table() {
     setStartDate(dayjsDate);
   };
 
-  // @TODO - Improve so that we can modify tasks from the TaskMenu and TaskRow again.
+  const handleUpdateTaskStatus = (event, selectedTaskInstance) => {
+    setTasks((prevState) => {
+      return prevState.map((task) => {
+        if (task.id === selectedTaskInstance.task.id) {
+          const updatedDays = task.days.map((day) => {
+            const text = event.target.textContent.toLowerCase();
+            if (
+              day.day === selectedTaskInstance.day.day &&
+              ["yes", "no", "half"].includes(text)
+            ) {
+              return { ...day, completed: text };
+            }
+            return day;
+          });
+          return { ...task, days: updatedDays };
+        }
+        return task;
+      });
+    });
+  };
 
   return (
     <>
@@ -196,7 +215,7 @@ export default function Table() {
                       style={{ border: "1px solid black", width: 200 }}
                       placeholder="add task"
                       value={currentText}
-                      onChange={handleSetValue}
+                      onChange={handleSetTaskText}
                       onBlur={handleAddTask}
                       onKeyDown={handleKeyDown}
                     ></Input>
@@ -208,7 +227,7 @@ export default function Table() {
               <TaskMenu
                 anchorRef={anchorRef}
                 isOpen={isTaskMenuOpen}
-                selectedTaskInstance
+                onUpdateTaskStatus={handleUpdateTaskStatus}
               />
             )}
           </div>
