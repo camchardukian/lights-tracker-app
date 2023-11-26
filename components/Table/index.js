@@ -12,12 +12,10 @@ import dayjs from "dayjs";
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
-import { useTask } from "../../hooks/useTask";
 
 const dateFormat = "ddd - MMM DD";
 
 export default function Table() {
-  const { isTaskMenuOpen, anchorRef } = useTask();
   const [tasks, setTasks] = useState([]);
   const [isMounted, setIsMounted] = useState(false);
   const [currentText, setCurrentText] = useState("");
@@ -26,6 +24,10 @@ export default function Table() {
   const [firstAndLastIndexToShow, setFirstAndLastIndexToShow] = useState([
     0, 6,
   ]);
+  const [isTaskMenuOpen, setIsTaskMenuOpen] = useState(false);
+  const [anchorRef, setAnchorRef] = useState(null);
+  const [selectedTaskInstance, setSelectedTaskInstance] = useState({});
+
   let finalPage;
   if (tasks.length) {
     finalPage = Math.ceil(tasks[0].days.length / 7);
@@ -118,6 +120,12 @@ export default function Table() {
     setStartDate(dayjsDate);
   };
 
+  const handleOpenMenu = (event, taskAndDay) => {
+    setAnchorRef(event.currentTarget);
+    setSelectedTaskInstance(taskAndDay);
+    setIsTaskMenuOpen(true);
+  };
+
   const handleUpdateTaskStatus = (event, selectedTaskInstance) => {
     setTasks((prevState) => {
       return prevState.map((task) => {
@@ -137,6 +145,7 @@ export default function Table() {
         return task;
       });
     });
+    setIsTaskMenuOpen(false);
   };
 
   return (
@@ -206,6 +215,9 @@ export default function Table() {
                       task={task}
                       firstAndLastIndexToShow={firstAndLastIndexToShow}
                       onEdit={handleEditTask}
+                      onOpenMenu={(e, taskAndDay) =>
+                        handleOpenMenu(e, taskAndDay, anchorRef)
+                      }
                     />
                   );
                 })}
@@ -228,6 +240,7 @@ export default function Table() {
                 anchorRef={anchorRef}
                 isOpen={isTaskMenuOpen}
                 onUpdateTaskStatus={handleUpdateTaskStatus}
+                selectedTaskInstance={selectedTaskInstance}
               />
             )}
           </div>

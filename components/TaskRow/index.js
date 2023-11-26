@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import styled from "@emotion/styled";
-import { useTask } from "../../hooks/useTask";
 import React, { useRef } from "react";
 import { Input } from "@mui/material";
 
@@ -19,15 +18,7 @@ const StyledButton = styled(Button)`
 `;
 
 export default function TaskRow(props) {
-  const { setIsTaskMenuOpen, setAnchorRef, setSelectedTaskInstance } =
-    useTask();
-  const { task, style, firstAndLastIndexToShow, onEdit } = props;
-
-  const handleOpenMenu = (event, taskAndDay) => {
-    setAnchorRef(event.currentTarget);
-    setSelectedTaskInstance(taskAndDay);
-    setIsTaskMenuOpen(true);
-  };
+  const { task, style, firstAndLastIndexToShow, onEdit, onOpenMenu } = props;
 
   const anchorRef = useRef(null);
   return (
@@ -51,7 +42,7 @@ export default function TaskRow(props) {
               <StyledButton
                 completed={day.completed}
                 variant="contained"
-                onClick={(event) => handleOpenMenu(event, taskAndDay)}
+                onClick={(event) => onOpenMenu(event, taskAndDay)}
                 ref={anchorRef}
               >
                 {day.completed}
