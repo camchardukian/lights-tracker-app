@@ -1,36 +1,12 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+import { connectToDatabase } from "../../db";
 
 export default async function handler(req, res) {
-  const client = new MongoClient(process.env.uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    },
-  });
-
-  async function run() {
-    try {
-      // Connect the client to the server (optional starting in v4.7)
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      console.log(
-        "Pinged your deployment. You successfully connected to MongoDB!"
-      );
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await client.close();
-    }
-  }
-
   try {
-    await run();
-    const db = client.db();
+    const db = await connectToDatabase();
 
     // Perform MongoDB operations here
-    // const collection = db.collection("tasks");
-    // const tasks = await collection.find({}).toArray();
+    const collection = db.collection("tasks");
+    const tasks = await collection.find({}).toArray();
 
     res.status(200).json({
       data: [
@@ -88,10 +64,9 @@ export default async function handler(req, res) {
         },
       ],
     });
+    // res.status(200).json({ data: tasks });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
     res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    await client.close();
   }
 }
