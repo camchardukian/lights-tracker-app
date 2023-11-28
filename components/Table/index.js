@@ -155,105 +155,106 @@ export default function Table() {
           <CircularProgress />
         </Box>
       ) : (
-        <div>
-          <div style={{ width: "100%", textAlign: "center" }}>
-            <DatePicker onChange={handleSetDate} label="Choose start date" />
-          </div>
-          {/* @TODO - Improve this so that horizontal scrolling works better. */}
-          <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
-            <h2 style={{ textAlign: "center" }}>Week {currentPage}</h2>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th className={styles.tableHead}>
-                    Task
-                    {/* @TODO - Add click and drag to adjust column width */}
-                    <Divider
-                      className={styles.divider}
-                      orientation="vertical"
-                      flexItem
-                    />
-                  </th>
+        <div>hello....</div>
+        // <div>
+        //   <div style={{ width: "100%", textAlign: "center" }}>
+        //     <DatePicker onChange={handleSetDate} label="Choose start date" />
+        //   </div>
+        //   {/* @TODO - Improve this so that horizontal scrolling works better. */}
+        //   <div style={{ width: "100%", overflowX: "auto", marginTop: 32 }}>
+        //     <h2 style={{ textAlign: "center" }}>Week {currentPage}</h2>
+        //     <table className={styles.table}>
+        //       <thead>
+        //         <tr>
+        //           <th className={styles.tableHead}>
+        //             Task
+        //             {/* @TODO - Add click and drag to adjust column width */}
+        //             <Divider
+        //               className={styles.divider}
+        //               orientation="vertical"
+        //               flexItem
+        //             />
+        //           </th>
 
-                  {tasks[0].days.map((_, index) => {
-                    if (
-                      index >= firstAndLastIndexToShow[0] &&
-                      index <= firstAndLastIndexToShow[1]
-                    ) {
-                      return (
-                        <React.Fragment key={index}>
-                          <th className={styles.tableHead}>
-                            <Divider
-                              className={styles.divider}
-                              orientation="vertical"
-                              flexItem
-                            />
-                            {dayjs(startDate.add(index, "day")).format(
-                              dateFormat
-                            )}
-                          </th>
-                        </React.Fragment>
-                      );
-                    }
-                  })}
-                  <th>
-                    <Button
-                      disabled={!isFinalPage}
-                      onClick={handleAddWeek}
-                      variant="contained"
-                    >
-                      Add Week
-                    </Button>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {tasks.map((task, index) => {
-                  return (
-                    <TaskRow
-                      key={index}
-                      task={task}
-                      firstAndLastIndexToShow={firstAndLastIndexToShow}
-                      onEdit={handleEditTask}
-                      onOpenMenu={(e, taskAndDay) =>
-                        handleOpenMenu(e, taskAndDay, anchorRef)
-                      }
-                    />
-                  );
-                })}
-                <tr>
-                  <td>
-                    <Input
-                      style={{ border: "1px solid black", width: 200 }}
-                      placeholder="add task"
-                      value={currentText}
-                      onChange={handleSetTaskText}
-                      onBlur={handleAddTask}
-                      onKeyDown={handleKeyDown}
-                    ></Input>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            {isTaskMenuOpen && (
-              <TaskMenu
-                anchorRef={anchorRef}
-                isOpen={isTaskMenuOpen}
-                onUpdateTaskStatus={handleUpdateTaskStatus}
-                selectedTaskInstance={selectedTaskInstance}
-              />
-            )}
-          </div>
-          <Stack spacing={2}>
-            <Pagination
-              count={finalPage}
-              page={currentPage}
-              disabled={finalPage === 1}
-              color="primary"
-              onChange={handlePageChange}
-            />
-          </Stack>
-        </div>
+        //           {tasks[0].days.map((_, index) => {
+        //             if (
+        //               index >= firstAndLastIndexToShow[0] &&
+        //               index <= firstAndLastIndexToShow[1]
+        //             ) {
+        //               return (
+        //                 <React.Fragment key={index}>
+        //                   <th className={styles.tableHead}>
+        //                     <Divider
+        //                       className={styles.divider}
+        //                       orientation="vertical"
+        //                       flexItem
+        //                     />
+        //                     {dayjs(startDate.add(index, "day")).format(
+        //                       dateFormat
+        //                     )}
+        //                   </th>
+        //                 </React.Fragment>
+        //               );
+        //             }
+        //           })}
+        //           <th>
+        //             <Button
+        //               disabled={!isFinalPage}
+        //               onClick={handleAddWeek}
+        //               variant="contained"
+        //             >
+        //               Add Week
+        //             </Button>
+        //           </th>
+        //         </tr>
+        //       </thead>
+        //       <tbody>
+        //         {tasks.map((task, index) => {
+        //           return (
+        //             <TaskRow
+        //               key={index}
+        //               task={task}
+        //               firstAndLastIndexToShow={firstAndLastIndexToShow}
+        //               onEdit={handleEditTask}
+        //               onOpenMenu={(e, taskAndDay) =>
+        //                 handleOpenMenu(e, taskAndDay, anchorRef)
+        //               }
+        //             />
+        //           );
+        //         })}
+        //         <tr>
+        //           <td>
+        //             <Input
+        //               style={{ border: "1px solid black", width: 200 }}
+        //               placeholder="add task"
+        //               value={currentText}
+        //               onChange={handleSetTaskText}
+        //               onBlur={handleAddTask}
+        //               onKeyDown={handleKeyDown}
+        //             ></Input>
+        //           </td>
+        //         </tr>
+        //       </tbody>
+        //     </table>
+        //     {isTaskMenuOpen && (
+        //       <TaskMenu
+        //         anchorRef={anchorRef}
+        //         isOpen={isTaskMenuOpen}
+        //         onUpdateTaskStatus={handleUpdateTaskStatus}
+        //         selectedTaskInstance={selectedTaskInstance}
+        //       />
+        //     )}
+        //   </div>
+        //   <Stack spacing={2}>
+        //     <Pagination
+        //       count={finalPage}
+        //       page={currentPage}
+        //       disabled={finalPage === 1}
+        //       color="primary"
+        //       onChange={handlePageChange}
+        //     />
+        //   </Stack>
+        // </div>
       )}
     </>
   );
