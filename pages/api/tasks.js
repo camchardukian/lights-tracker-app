@@ -4,7 +4,6 @@ export default async function handler(req, res) {
   try {
     const db = await connectToDatabase();
 
-    // Perform MongoDB operations here
     const collection = db.collection("tasks");
     const tasks = await collection.find({}).toArray();
 
