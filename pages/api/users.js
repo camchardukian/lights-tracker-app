@@ -15,6 +15,7 @@ export default async function handler(req, res) {
 
 export async function createUser(name, email, password) {
   try {
+    console.log("try 2", name, email, password);
     const db = await connectToDatabase();
     const usersCollection = db.collection("users");
 
@@ -26,32 +27,15 @@ export async function createUser(name, email, password) {
     };
 
     const result = await usersCollection.insertOne(newUser);
-
-    if (result.insertedCount === 1) {
+    console.log("rrrrrrrr", result);
+    if (result.acknowledged) {
       return newUser;
     } else {
-      return null; // User creation failed
+      throw new Error("Unable to insert new user into the database");
     }
   } catch (error) {
+    // Log the full error object for better debugging
     console.error("Error creating user:", error);
-    throw error; // Handle error appropriately
-  }
-}
-
-export async function getUserTasks(userId) {
-  try {
-    const db = await connectToDatabase();
-    const usersCollection = db.collection("users");
-
-    const user = await usersCollection.findOne({ _id: userId });
-
-    if (!user) {
-      return null; // User not found
-    }
-
-    return user.tasks || [];
-  } catch (error) {
-    console.error("Error getting user tasks:", error);
     throw error; // Handle error appropriately
   }
 }

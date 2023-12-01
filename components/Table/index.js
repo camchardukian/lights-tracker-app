@@ -13,7 +13,6 @@ import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
 
-// @TODO - Add inputs/form to add a user
 const dateFormat = "ddd - MMM DD";
 
 export default function Table() {
@@ -150,35 +149,6 @@ export default function Table() {
     setIsTaskMenuOpen(false);
   };
 
-  const handleCreateUser = async () => {
-    console.log("create");
-    try {
-      // @TODO - replace this with real data later.
-      const postData = {
-        name: "John Doe",
-        email: "john.doe@example.com",
-        password: "password123",
-      };
-
-      const createUserResponse = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-      // Check if user creation was successful
-      if (createUserResponse.ok) {
-        const newUser = await createUserResponse.json();
-        console.log("New user created:", newUser);
-      } else {
-        console.error("Error creating user:", createUserResponse.statusText);
-      }
-    } catch (error) {
-      console.error("Error creating user:", error);
-    }
-  };
-
   return (
     <>
       {!isMounted ? (
@@ -187,7 +157,7 @@ export default function Table() {
         </Box>
       ) : (
         <div>
-          <CreateUserForm onCreateUser={handleCreateUser} />
+          <CreateUserForm />
 
           <div style={{ width: "100%", textAlign: "center" }}>
             <DatePicker onChange={handleSetDate} label="Choose start date" />

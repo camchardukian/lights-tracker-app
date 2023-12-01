@@ -1,9 +1,10 @@
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import styles from "./styles.module.scss";
 
 import React, { useState } from "react";
 
-export default function CreateUserForm(props) {
+export default function CreateUserForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,16 +20,16 @@ export default function CreateUserForm(props) {
         body: JSON.stringify({ name, email, password }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.error || "An error occurred");
-      } else {
+      if (response.ok) {
         const newUser = await response.json();
         console.log("New user created:", newUser);
         setName("");
         setEmail("");
         setPassword("");
         setError(null);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "An error occurred");
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -37,7 +38,7 @@ export default function CreateUserForm(props) {
   };
 
   return (
-    <div>
+    <div className={styles.CreateUserForm}>
       <h2>Create User Form</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <TextField
