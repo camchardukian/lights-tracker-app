@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { connectToDatabase } from "../../db";
 
 export default async function handler(req, res) {
@@ -15,27 +16,35 @@ export default async function handler(req, res) {
 
 export async function createUser(name, email, password) {
   try {
-    console.log("try 2", name, email, password);
     const db = await connectToDatabase();
     const usersCollection = db.collection("users");
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = {
       name,
       email,
-      password, // Note: You'll need to hash the password before saving it in production
-      tasks: [], // Initialize tasks as an empty array for the new user
+      password: hashedPassword,
+      tasks: [],
     };
 
     const result = await usersCollection.insertOne(newUser);
-    console.log("rrrrrrrr", result);
+
     if (result.acknowledged) {
       return newUser;
     } else {
       throw new Error("Unable to insert new user into the database");
     }
   } catch (error) {
-    // Log the full error object for better debugging
     console.error("Error creating user:", error);
-    throw error; // Handle error appropriately
+    throw error;
   }
 }
+
+// async function checkIfUserExists(email) {
+//   try {
+
+//   } catch (error) {
+
+//   }
+// }
