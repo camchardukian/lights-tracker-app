@@ -4,7 +4,7 @@ import styles from "./styles.module.scss";
 
 import React, { useState } from "react";
 
-export default function CreateUserForm() {
+export default function RegistrationForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,8 +38,7 @@ export default function CreateUserForm() {
   };
 
   return (
-    <div className={styles.CreateUserForm}>
-      <h2>Create User Form</h2>
+    <div className={styles.RegistrationForm}>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <TextField
         id="name"

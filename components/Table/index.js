@@ -8,7 +8,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import CreateUserForm from "../CreateUserForm";
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
@@ -157,8 +156,7 @@ export default function Table() {
         </Box>
       ) : (
         <div>
-          <CreateUserForm />
-
+          <h1 style={{ textAlign: "center" }}>Lights Tracker</h1>
           <div style={{ width: "100%", textAlign: "center" }}>
             <DatePicker onChange={handleSetDate} label="Choose start date" />
           </div>
