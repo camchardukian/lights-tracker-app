@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import TaskRow from "../TaskRow";
 import TaskMenu from "../TaskMenu";
 import styles from "./styles.module.scss";
-
+// @TODO - Add authentication so that the user can actually login
 const dateFormat = "ddd - MMM DD";
 
 export default function Table() {

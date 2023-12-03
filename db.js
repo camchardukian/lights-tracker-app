@@ -4,7 +4,7 @@ let client;
 
 async function connectToDatabase() {
   if (!client) {
-    client = new MongoClient(process.env.uri, {
+    client = new MongoClient(process.env.MONGODB_URI, {
       serverApi: {
         version: ServerApiVersion.v1,
         strict: true,
