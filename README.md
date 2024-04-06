@@ -1,1 +1,1 @@
-This is an application that allows users to track their adherence to their daily habits.
+This is a work in progress (not yet complete) application that allows users to track their adherence to their daily habits. I was building it to experiment with NextJS and NextAuth.js after having not worked with those technologies for several years.
